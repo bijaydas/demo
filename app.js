@@ -7,6 +7,8 @@ app.use(morgan('dev'));
 app.use(express.json())
 app.use(express.static(__dirname + '/public'));
 
+console.log('hello world  ')
+
 app.post('/post', function (req, res) {
   const output = write(req.body.text);
   return res.json(output);
