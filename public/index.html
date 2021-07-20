@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+  <title>Document</title>
+</head>
+<body class="p-4">
+  <form action="">
+    <input type="text" class="w-full border-b border-gray-300 focus:outline-none text-lg text-gray-500 py-2">
+  </form>
+
+  <h1 class="my-3 text-lg font-semibold text-center text-gray-600">Output</h1>
+  <ul class="flex flex-col space-y-3 text-gray-800 posts">
+    
+  </ul>
+  <script>
+    async function read() {
+      let res = await fetch('/post');
+      res = await res.json();
+      
+      if (res.db.length === 0) {
+        return 'No posts';
+      }
+
+      const posts = document.querySelector('.posts');
+      posts.innerHTML = '';
+
+      res.db.forEach((post) => {
+        const li = document.createElement('li');
+        li.classList.add('border-b', 'border-gray-200');
+        li.innerHTML = post.text;
+        posts.appendChild(li);
+      });
+    }
+
+    read();
+    const form = document.querySelector('form');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const input = document.querySelector('input');
+      const text = input.value;
+      if (text === '') return;
+
+      const options = {
+        method: 'post',
+        body: JSON.stringify({
+          text,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      };
+
+      fetch('/post', options).then((res) => res.json()).then((res) => {
+        read();
+      })
+    })
+  </script>
+</body>
+</html>
